@@ -1,0 +1,9 @@
+values inside of highlighted boxes can be 
+increased or decresed with the arrow keys
+
+press e (in the ColorCreator window) to save colors
+for use in the final texture
+
+press s and w to go through selected colors
+
+
