@@ -4,6 +4,7 @@ import java.awt.Color;
 
 ColorCreator cc = new ColorCreator();
 ColorSelector cs = new ColorSelector();
+TextureOverview to = new TextureOverview();
 String[] args = {"second window"};
 
 Color[] colorIndex = new Color[10000];
@@ -43,8 +44,119 @@ String blankTexture = "";
 String textureFilename = "textures.json";
 
 
-// 
-// THIRD WINDOW
+//
+// FOURTH WINDOW : OVERVIEW
+//
+
+public class TextureOverview extends PApplet {
+
+
+  void settings() {
+    size(710, 710);
+  }
+
+  void draw() {
+    background(backgroundFlash);
+    int[] clickFieldX = new int[10000];
+    int[] clickFieldY = new int[10000];
+    int texturesOnSide = 16;
+    int x = 10;
+    int y = 10;
+    int totalOutSide = 43;
+    int texCount = 0;
+
+    for(int i = 0; i < texturesOnSide; i++) {
+        for(int j = 0; j < texturesOnSide; j++) {
+          //rect(x,y,10,10);
+            
+            clickFieldX[texCount] = x;
+            clickFieldY[texCount] = y;
+            
+            stroke(backgroundFlash);
+            strokeWeight(3);
+            fill(backgroundFlash);
+            rect(x,y ,40,40);
+            
+            noStroke();
+            strokeWeight(1);
+            if(texturepack[texCount] != null) {
+              drawTexture(x, y, 5, texCount);
+            }
+            
+            x += totalOutSide;
+            texCount++;
+        }
+        x = 10;
+        y += totalOutSide;
+    }
+    
+    if(mousePressed) {
+      for(int i = 0; i < clickFieldY.length; i++) {
+        if(mouseX > clickFieldX[i] && mouseX < clickFieldX[i] + totalOutSide && mouseY > clickFieldY[i] && mouseY < clickFieldY[i] + totalOutSide) {
+          curTexture = i;
+        }
+      }
+    }
+    
+  }
+  
+  void drawTexture(int x, int y, int _pixSize, int texPackNum) {
+  fill(255);
+
+  String[] strOut = new String[textureSize*textureSize];
+  int[] out = new int[strOut.length];
+
+  for (int i = 0; i < strOut.length; i++) {
+    strOut[i] = texturepack[texPackNum].charAt(i*2) + "";
+  }
+
+  for (int i = 0; i < strOut.length; i++) {
+    out[i] = Integer.parseInt(strOut[i]);
+  }
+
+  for (int i = 0; i < textureSize; i++) {
+    for (int j = 0; j < textureSize; j++) {
+
+      if (out[i*textureSize+j] == 0) {
+        fill(bgr, bgg, bgb);
+      } else {
+        fill(colorIndex[out[i*textureSize+j]].getRed(),
+          colorIndex[out[i*textureSize+j]].getGreen(),
+          colorIndex[out[i*textureSize+j]].getBlue());
+      }
+
+      if (bgr+bgg+bgb < colorInverseThreshold) {
+        stroke(255);
+      } else {
+        stroke(0);
+      }
+
+      if (_pixSize < 5) {
+        noStroke();
+      } else {
+        stroke(0);
+      }
+      
+      try {
+      rect(x+i*_pixSize, y+j*_pixSize, _pixSize, _pixSize);
+      } catch(NullPointerException e) {
+        
+      }
+
+      if (out[i*textureSize+j] == 0 && _pixSize > 20) {
+
+        inverseColors(bgr, bgg, bgb);
+        text("T", x+i*_pixSize+3, y+j*_pixSize+22);
+      }
+
+      stroke(0);
+    }
+  }
+}
+}
+
+//
+// THIRD WINDOW : COLOR SELECTOR
 //
 public class ColorSelector extends PApplet {
 
@@ -64,7 +176,7 @@ public class ColorSelector extends PApplet {
         text("Currently \nSelected \nColor: \nTransparent", 240, 20);
       } else {
         text("Currently \nSelected \nColor: \nR:" + colorIndex[colorSelected].getRed()
-          + " G:" + colorIndex[colorSelected].getGreen() 
+          + " G:" + colorIndex[colorSelected].getGreen()
           + " B:" + colorIndex[colorSelected].getBlue()
           , 240, 20);
       }
@@ -132,14 +244,14 @@ public class ColorCreator extends PApplet {
 
     textSize(25);
     fill(0, 0, 0);
-    text(cr, 50, 55);    
+    text(cr, 50, 55);
     text(cg, 170, 55);
     text(cb, 290, 55);
 
 
     textSize(12);
     fill(0, 0, 0);
-    text("r", 25, 20);    
+    text("r", 25, 20);
     text("g", 145, 20);
     text("b", 265, 20);
 
@@ -233,19 +345,20 @@ public class ColorCreator extends PApplet {
 //
 
 void settings() {
-  
-  size(600, 615);
-  
+
+  size(600, 515);
+
 
   for (int i = 0; i < colorIndex.length; i++) {
     colorIndex[i] = new Color(255, 255, 255);
   }
 
   texture = new int[textureSize*textureSize];
-  
+
 
   PApplet.runSketch(args, cc);
   PApplet.runSketch(args, cs);
+  PApplet.runSketch(args, to);
 }
 
 void draw() {
@@ -268,49 +381,46 @@ void draw() {
     texturepackSize = textureSize;
   }
 
-  drawTexture(430, 20, 16, curTexture);  
+  drawTexture(430, 20, 16, curTexture);
 
-  for (int i = 0; i < 100; i++) {
-    if (i == curTexture) {
-      drawTexture(250-curTexture*110+i*110-20, 380, 15, i);
-    } else {
-      drawTexture(250-curTexture*110+i*110, 380, 10, i);
-    }
+  //for (int i = 0; i < 100; i++) {
+  //  if (i == curTexture) {
+  //    drawTexture(250-curTexture*110+i*110-20, 380, 15, i);
+  //  } else {
+  //    drawTexture(250-curTexture*110+i*110, 380, 10, i);
+  //  }
 
-    fill(0);
-    text(i, 250-curTexture*110+i*110, 370);
-  }
-
-
-
+  //  fill(0);
+  //  text(i, 250-curTexture*110+i*110, 370);
+  //}
 
   //draw selected box first
   fill(0);
-  rect(selectedValue*100+15, 500, 90, 75);
+  rect(selectedValue*100+15, 400, 90, 75); 
   //text("texturepack: ", 20, 390);
 
   //draw the texture size input box
   fill(255);
-  rect(20, 505, 80, 65);
-  rect(120, 505, 80, 65);
-  rect(220, 505, 80, 65);
-  rect(320, 505, 80, 65);
+  rect(20, 405, 80, 65);
+  rect(120, 405, 80, 65);
+  rect(220, 405, 80, 65);
+  rect(320, 405, 80, 65);
 
   //draw text on boxes
   fill(0);
 
   textSize(13); // small text
-  text("textureSize", 22, 517);
-  text("bg r", 122, 517);
-  text("bg g", 222, 517);
-  text("bg b", 322, 517);
+  text("textureSize", 22, 417);
+  text("bg r", 122, 417);
+  text("bg g", 222, 417);
+  text("bg b", 322, 417);
 
   textSize(25); // big text
-  text(selectedValue+"", 580, 600);
-  text(textureSize, 50, 550);
-  text(bgr, 135, 550);
-  text(bgg, 235, 550);
-  text(bgb, 335, 550);
+  text(curTexture+"", 480, 500);
+  text(textureSize, 50, 450);
+  text(bgr, 135, 450);
+  text(bgg, 235, 450);
+  text(bgb, 335, 450);
 
   // find round x and y
 
@@ -320,7 +430,7 @@ void draw() {
   pixX = ceil(((roundX+textureOffsetX/pixSize)/20)/2);
   pixY = ceil(((roundY+textureOffsetY/pixSize)/20)/2);
 
-  text(ceil(((roundX-20/pixSize)/20)/2) + ", " + ceil(((roundY-20/pixSize)/20)/2) + " canPlace: " + canPlace, 20, 605);
+  text(ceil(((roundX-20/pixSize)/20)/2) + ", " + ceil(((roundY-20/pixSize)/20)/2) + " canPlace: " + canPlace, 20, 505);
 
   //draw texture
   if (textureSize > 12) {
@@ -333,17 +443,17 @@ void draw() {
 
   if (blink) {
     fill(0);
-    if (pixX < textureSize && pixY < textureSize) { 
+    if (pixX < textureSize && pixY < textureSize) {
       rect(roundX, roundY, int(mouseZoom)+pixSize, int(mouseZoom)+pixSize);
     }
   }
 
-  if (pixX < textureSize && pixY < textureSize) { 
+  if (pixX < textureSize && pixY < textureSize) {
     canPlace = true;
     if (mousePressed) {
       saveTexture(curTexture);
 
-      println("set color: " + colorIndex[colorSelected] + "at xblock: " + pixX + " and yblock: " + pixY + 
+      println("set color: " + colorIndex[colorSelected] + "at xblock: " + pixX + " and yblock: " + pixY +
         "\nwith texture value of " + colorSelected + " also saved to texturepack");
 
       texture[pixX*textureSize+pixY] = colorSelected;
@@ -366,7 +476,7 @@ void draw() {
 void drawTexture(int x, int y, int _pixSize, int texPackNum) {
   fill(255);
 
-  String[] strOut = new String[textureSize*textureSize]; 
+  String[] strOut = new String[textureSize*textureSize];
   int[] out = new int[strOut.length];
 
   for (int i = 0; i < strOut.length; i++) {
@@ -383,8 +493,8 @@ void drawTexture(int x, int y, int _pixSize, int texPackNum) {
       if (out[i*textureSize+j] == 0) {
         fill(bgr, bgg, bgb);
       } else {
-        fill(colorIndex[out[i*textureSize+j]].getRed(), 
-          colorIndex[out[i*textureSize+j]].getGreen(), 
+        fill(colorIndex[out[i*textureSize+j]].getRed(),
+          colorIndex[out[i*textureSize+j]].getGreen(),
           colorIndex[out[i*textureSize+j]].getBlue());
       }
 
@@ -399,12 +509,16 @@ void drawTexture(int x, int y, int _pixSize, int texPackNum) {
       } else {
         stroke(0);
       }
-
+      
+      try {
       rect(x+i*_pixSize, y+j*_pixSize, _pixSize, _pixSize);
+      } catch(NullPointerException e) {
+        
+      }
 
       if (out[i*textureSize+j] == 0 && _pixSize > 20) {
 
-        inverseColors(bgr, bgg, bgb); 
+        inverseColors(bgr, bgg, bgb);
         text("T", x+i*_pixSize+3, y+j*_pixSize+22);
       }
 
@@ -414,7 +528,7 @@ void drawTexture(int x, int y, int _pixSize, int texPackNum) {
 }
 
 void exportTexturepack() {
-  
+
   texturepackLength = 0;
   for(int i = 0; i < texturepack.length; i++) {
     if(!texturepack[i].equals(blankTexture)) {
@@ -435,13 +549,13 @@ void exportTexturepack() {
   jobj.setJSONObject("colorIndex", clrObj); //puts the color json object into the main export json "jobj"
 
   processing.data.JSONObject texObj = new processing.data.JSONObject(); // does the same thing as color json thing
-  
+
   //if(texturepack[0] == blankTexture) {} else {
   //  texObj.put(0+"", blankTexture);
   //}
-  
+
   //texObj.put("9999", "0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.9990.0.0.0.0.0.0.0.9990.9990.9990.9990.9990.9990.9990.9990.9990.0.9990.0.0.0.9990.0.9990.0.0.9990.0.9990.0.0.9990.0.0.0.9990.0.0.0.0.0.0.0.0.0.0.0.0");
-  
+
   for (int i = 0; i < texturepackLength+1; i++) {
     texObj.put(i+"", texturepack[i]);
   }
@@ -472,20 +586,16 @@ void saveTexture(int texturePackNum) {
   println("saved: " + out);
   println();
 
-  
-  
 }
 
-
-
 void loadTexture(int texturePackNum) {
-  String[] strOut = new String[textureSize*textureSize]; 
+  String[] strOut = new String[textureSize*textureSize];
   for (int i = 0; i < strOut.length; i++) {
     strOut[i] = texturepack[texturePackNum].charAt(i*2) + "";
   }
 
   //for(int i = 0; i < texturepack[texturePackNum].length(); i++) {
-  //  strOut[i] = 
+  //  strOut[i] =
   //  texturepack[texturePackNum].split(".")[i];
   //}
 
@@ -541,44 +651,44 @@ void keyPressed() {
     curTexture--;
     loadTexture(curTexture);
   }
-  
+
   if (key == 'z') {
     importTexturepack();
   }
-  
+
   if (key == 'c') {
     println("copied: " + texturepack[curTexture]);
     clipboardTexture = texturepack[curTexture];
   }
-  
+
   if (key == 'v') {
     texturepack[curTexture] = clipboardTexture;
     loadTexture(curTexture);
   }
-  
+
   if(key == 't') {
-    
+
     for(int i = curTexture; i < texturepackLength; i++) {
       texturepack[i] = texturepack[i + 1];
-      
+
       println("texture " + i + " replaced with " + (i+1));
     }
     texturepackLength--;
-    
+
   }
-  
+
   if(key == ']') {
-    
+
     texturepackLength++;
-    
+
   }
-  
+
   if(key == '[') {
-    
+
     texturepackLength--;
-    
+
   }
-  
+
   if (key == '.') {
     if (selectedValue == 1) {
       bgr=255;
@@ -634,19 +744,19 @@ void keyPressed() {
 
     if (selectedValue == 1) {
       bgr++;
-      if (bgr > 255) 
+      if (bgr > 255)
         bgr=255;
     }
 
     if (selectedValue == 2) {
       bgg++;
-      if (bgg > 255) 
+      if (bgg > 255)
         bgg=255;
     }
 
     if (selectedValue == 3) {
       bgb++;
-      if (bgb > 255) 
+      if (bgb > 255)
         bgb=255;
     }
   }
@@ -664,19 +774,19 @@ void keyPressed() {
 
     if (selectedValue == 1) {
       bgr--;
-      if (bgr < 0) 
+      if (bgr < 0)
         bgr=0;
     }
 
     if (selectedValue == 2) {
       bgg--;
-      if (bgg < 0) 
+      if (bgg < 0)
         bgg=0;
     }
 
     if (selectedValue == 3) {
       bgb--;
-      if (bgb < 0) 
+      if (bgb < 0)
         bgb=0;
     }
   }
@@ -691,9 +801,9 @@ void importTexturepack() {
     }
     //println(texStr);
     Object obj = new JSONParser().parse(texStr);
-    
+
     org.json.simple.JSONObject jObj = (org.json.simple.JSONObject) obj;
-  
+
     //println(jObj.get("colorIndex"));
     textureSize = Integer.parseInt(jObj.get("textureSize").toString());
     println("texture size: " + textureSize);
@@ -734,11 +844,11 @@ void importTexturepack() {
       } else {
         texturepackLength = i;
         break;
-      }
+      } 
       println(i + "    " + texJson.get(i+""));
     }
-    
-  } 
+
+  }
   catch(Exception e) {
     println("error when loading textures ");
   }
