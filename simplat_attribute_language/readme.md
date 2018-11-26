@@ -1,8 +1,7 @@
 # Simplat Attributes
 
-simplat's attribute editor is a type of programming language similar to css/json
-
 ### general knowledge when
+simplat's attribute editor is a type of programming language similar to css/json
 
 ## Examples
 ```
