@@ -1,0 +1,19 @@
+MAKE A PROGRAMMING LANGUAGE SIMILAR TO CSS INSTEAD OF GUI
+example of programming language:
+(make textureId 6, 17, 24 all unbreakable)
+
+6,17,24 {
+    canBreak: false
+}
+
+
+option to chose animation frames
+option to chose on break block
+chose level order
+set level name
+show level name in some menu
+show enemy movement   walk back and forth, flying
+show enemy animation   flip back and forth, up and down, or different animation textures
+blocks that teleport player to other parts of level
+ability to have sublevels
+ability to change level's names instead of level1,level2,level3,... so on
