@@ -5,11 +5,27 @@
         <title></title>
     </head>
     <body>
-        <textarea rows="10" cols="39"></textarea>
+        <div id="codemirrorDiv" style="border: dotted; border-color:red"></div>
         <br />
-        <button id="convertButton">Convert</button>
+        <button id="convertButton" onclick="convert()">Convert</button>
+        <br />
         <br />
         <textarea></textarea>
     </body>
+    <style>
+    html {
+        background-color: black;
+    }
+    .styled-background {
+        background-color: red;
+    }
+    .transparent {
+        background-color: #090300;
+    }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.42.0/theme/3024-night.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.42.0/codemirror.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.42.0/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.42.0/addon/selection/active-line.js"></script>
     <script type="text/javascript" src="attribute_editor.js"></script>
 </html>
