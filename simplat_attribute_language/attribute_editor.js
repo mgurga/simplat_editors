@@ -16,23 +16,26 @@ function convert() {
     var output = {};
     var input = editor.getValue();
     var rawInput = [];
+    var atts = [];
     var currentlySelecting = ""; // "textures" or "levels"
     editor.setValue(input);
     document.getElementById("errorDisplay").innerHTML = "";
+    writePrettyOutput("");
+    writeOutput("");
     input = input.split("\n");
     rawInput = input;
     for (var i = 0; i < input.length; i++) {
         input[i] = input[i].replace(/\s/g, "");
     }
-    console.log(input);
+    //console.log(input);
 
     for (var i = 0; i < input.length; i++) {
         if (input[i].includes("{")) {
             readingAtts = true;
 
-            if (!(input[i].includes(".")) && !(input[i].includes("/"))) {
-                writeError("line " + i + " does not include a '.' or '/' but still lists IDs and has a starting curly bracket", i, rawInput[i].length);
-            }
+            //output = {};
+            atts = [];
+            currentlySelecting = ""
 
             if (input[i].charAt(0) == ".") {
                 currentlySelecting = "textures";
@@ -40,22 +43,43 @@ function convert() {
                 currentlySelecting = "levels";
             }
 
-            selectedIds = input[i].substring(0, input[i].length - 2);
+            selectedIds = input[i].substring(0, input[i].length - 1);
             console.log(selectedIds);
 
         }
         if (input[i].includes("}")) {
             readingAtts = false;
+
+            var attsToOut = {};
+            for (var j = 0; j < atts.length; j++) {
+                console.log(atts.length);
+                var attSplit = atts[j].split(":");
+                attsToOut[attSplit[0]] = attSplit[1];
+            }
+            console.log(attsToOut);
+
+            var idsToOut = selectedIds.substring(1, selectedIds.length).split(",");
+            console.log(idsToOut);
+
+            for (var j = 0; j < idsToOut.length; j++) {
+                output[idsToOut[j]] = attsToOut;
+            }
         }
+
         if (readingAtts && !(input[i].includes("{")) && !(input[i].includes("}"))) {
             //console.log(input[i]);
+            atts[atts.length] = input[i];
         }
 
     }
 
+    writePrettyOutput(JSON.stringify(output, undefined, 4));
+    writeOutput(JSON.stringify(output));
+
 }
 
 function writeError(err, line, lineLength) {
+    document.getElementById("errorDisplay").style.display = "inline";
     document.getElementById("errorDisplay").innerHTML = err;
     editor.markText({
         line: line,
@@ -66,4 +90,12 @@ function writeError(err, line, lineLength) {
     }, {
         className: "styled-background"
     });
+}
+
+function writePrettyOutput(out) {
+    document.getElementById("prettyOut").innerHTML = out;
+}
+
+function writeOutput(out) {
+    document.getElementById("outTextarea").innerHTML = out;
 }

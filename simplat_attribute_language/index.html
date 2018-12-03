@@ -5,17 +5,50 @@
         <title></title>
     </head>
     <body>
-        <div id="codemirrorDiv" style="border: dotted; border-color:red"></div>
+        <div id="codemirrorDiv" class="redborder"></div>
         <br />
-        <p id="errorDisplay" class="styled-background"></p>
-        <button id="convertButton" onclick="convert()">Convert</button>
+        <p id="errorDisplay" style="display: none;" class="styled-background"></p>
+        <button id="convertButton" style="width: 800px;" onclick="convert()">Complie</button>
         <br />
         <br />
-        <textarea></textarea>
+        <div id="outParent">
+            <div id="prettyLeft" class="redborder">
+                <h3>Pretty Print</h3>
+                <pre id="prettyOut"></pre>
+            </div>
+            <div id="rawRight" class="redborder">
+                <h3>Raw Attributes</h3>
+                <textarea rows=20 cols=40 id="outTextarea"></textarea>
+            </div>
+        </div>
+
     </body>
     <style>
     html {
         background-color: black;
+    }
+    #prettyOut, h3 {
+        color: white;
+    }
+    #prettyLeft {
+        float: left;
+        width: 400px;
+        height:370px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+    #rawRight {
+        float: right;
+        width: 400px;
+        height:370px;
+    }
+    #outParent {
+        width: 815px;
+        height:370px;
+    }
+    .redborder {
+        border: dotted;
+        border-color:red;
     }
     .styled-background {
         background-color: red;
