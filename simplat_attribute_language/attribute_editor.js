@@ -12,6 +12,7 @@ var errorLine = -1;
 function convert() {
 
     var readingAtts = false;
+    var readingLine = 0;
     var selectedIds = [];
     var output = {};
     var input = editor.getValue();
@@ -32,6 +33,7 @@ function convert() {
     for (var i = 0; i < input.length; i++) {
         if (input[i].includes("{")) {
             readingAtts = true;
+            readingLine = i;
 
             //output = {};
             atts = [];
@@ -54,9 +56,12 @@ function convert() {
             for (var j = 0; j < atts.length; j++) {
                 console.log(atts.length);
                 var attSplit = atts[j].split(":");
+                if (attSplit.length < 2 && attSplit.length > 2) {
+
+                }
                 attsToOut[attSplit[0]] = attSplit[1];
             }
-            console.log(attsToOut);
+            //console.log(attsToOut);
 
             var idsToOut = selectedIds.substring(1, selectedIds.length).split(",");
             console.log(idsToOut);
